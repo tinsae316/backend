@@ -15,6 +15,7 @@ datasource db {
 
 model User {
   id       String  @id @default(uuid())
+  name     String
   email    String  @unique
   password String
   posts    Post[]
@@ -27,5 +28,6 @@ model Post {
   authorId  String
   author    User     @relation(fields: [authorId], references: [id])
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 

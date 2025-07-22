@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Request } from 'express';
 
@@ -21,29 +22,39 @@ export class PostsController {
 
   @Post()
   create(@Body() dto: CreatePostDto, @Req() req: Request) {
-    const user = req.user as { userId: string };
-    return this.postsService.createPost(user.userId, dto);
+    const user = req.user as { id: string };
+    return this.postsService.createPost(user.id, dto);
   }
 
   @Get()
   findUserPosts(@Req() req: Request) {
-    const user = req.user as { userId: string };
-    return this.postsService.getPostsByUser(user.userId);
+    const user = req.user as { id: string };
+    return this.postsService.getPostsByUser(user.id);
+  }
+
+  @Get('all')
+  getAllPosts() {
+    return this.postsService.getAllPosts();
+  }
+
+  @Get(':id')
+  getPostById(@Param('id') postId: string) {
+    return this.postsService.getPostById(postId);
   }
 
   @Delete(':id')
   deletePost(@Param('id') postId: string, @Req() req: Request) {
-    const user = req.user as { userId: string };
-    return this.postsService.deletePost(user.userId, postId);
+    const user = req.user as { id: string };
+    return this.postsService.deletePost(user.id, postId);
   }
 
   @Patch(':id')
   updatePost(
     @Param('id') postId: string,
-    @Body() dto: CreatePostDto,
+    @Body() dto: UpdatePostDto,
     @Req() req: Request,
   ) {
-    const user = req.user as { userId: string };
-    return this.postsService.updatePost(user.userId, postId, dto);
+    const user = req.user as { id: string };
+    return this.postsService.updatePost(user.id, postId, dto);
   }
 }

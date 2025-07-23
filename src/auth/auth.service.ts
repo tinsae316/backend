@@ -18,7 +18,8 @@ export class AuthService {
         password: hash,
       },
     });
-    return { message: 'User created', userId: user.id };
+    // Return user info for NextAuth
+    return { id: user.id, name: user.name, email: user.email };
   }
 
   async login(dto: LoginDto) {
@@ -31,7 +32,7 @@ export class AuthService {
     const isMatch = await bcrypt.compare(dto.password, user.password);
     if (!isMatch) throw new UnauthorizedException('Invalid credentials');
 
-    const token = this.jwt.sign({ sub: user.id });
-    return { access_token: token };
+    // Return user info for NextAuth
+    return { id: user.id, name: user.name, email: user.email };
   }
 }
